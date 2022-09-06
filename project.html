@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form  onsubmit="saveTolocal(event)">
+        <label>choose expenseamount</label>
+        <input  id="amount" type="text" name="amounts"/>
+        <label>choose discription:</label>
+        <input id="discri" type="text" name="discris"/>
+        <label>choose a category:</label>
+        <select id="cate" name="cates">
+            <option value="fuel">fuel</option>
+            <option value="vacation"> vacation </option>
+            <option value="diesel">diesel</option>
+            
+          </select>
+        <button>Add Expense</button>
+    </form>
+    <ul id="listOfUsers"></ul>
+    <script type="text/javascript">
+        
+   function saveTolocal(event){
+    event.preventDefault();
+   
+    var amt=event.target.amounts.value;
+    var dstn=event.target.discris.value;
+     var ctgr=event.target.cates.value;
+    var  myObj={
+    amt,
+    dstn,
+    ctgr
+};
+     
+      
+      localStorage.setItem(myObj.dstn ,JSON.stringify(myObj));
+      console.log(localStorage);
+         show(myObj)
+    
+     
+   
+   }
+
+
+   function show(user){
+ 
+    var parentNode=document.getElementById('listOfUsers');
+    
+    var childNode=`<li id=${user.dstn}> ${user.amt} - ${user.dstn} -${user.ctgr} 
+        <button onclick=deleteUser('${user.dstn}')>Delete Expense</button>
+        <button onclick=editUserDetails('${user.dstn}','${user.amt}','${user.ctgr}')>Edit Expense</button>
+        </li>`;
+    parentNode.innerHTML=parentNode.innerHTML + childNode;
+
+    }    
+    
+   function deleteUser(dstn){
+        console.log(dstn);
+        localStorage.removeItem(dstn);
+        removeUserFromScreen(dstn);
+   }
+   function editUserDetails(dstn,amt,ctgr){
+    document.getElementById('discri').value=dstn;
+        document.getElementById('amount').value=amt;
+        document.getElementById('cate').value=ctgr;
+          deleteUser(dstn) ;
+   }
+   function  removeUserFromScreen(dstn){
+    const parentNode=document.getElementById("listOfUsers");
+    console.log(parentNode);
+   const childNodeToBeDeleted=document.getElementById(dstn);
+   console.log(childNodeToBeDeleted);
+    parentNode.removeChild(childNodeToBeDeleted);
+   }
+ 
+
+  
+   
+
+      window.addEventListener("DOMContentLoaded" ,()=>{
+     var localStorsgeObj=localStorage;
+     //console.log(localStorsgeObj);
+     var localstoragekeys=Object.keys(localStorsgeObj);
+     //console.log(localstoragekeys);
+     for(let i=0;i<localstoragekeys.length;i++){
+        var key=localstoragekeys[i];
+       //console.log(key);
+        var userdetailsString=localStorsgeObj[key];
+       // console.log(userdetailsString);
+        var userDetailsObj=JSON.parse(userdetailsString);
+       // console.log(userDetailsObj);
+           show(userDetailsObj);
+           
+        
+
+     }
+    });
+
+
+    
+      
+    </script>
+</body>
+</html>
